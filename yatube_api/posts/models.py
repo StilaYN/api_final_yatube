@@ -3,6 +3,12 @@ from django.db import models
 
 User = get_user_model()
 
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user')
+    following = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name='following', blank=True, null=True)
+
 
 class Post(models.Model):
     text = models.TextField()
