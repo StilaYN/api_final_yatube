@@ -19,12 +19,12 @@ class Follow(models.Model):
     following = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name='following',
         blank=True, null=True)
-    
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'following'],
-                name = 'follow_unique_constraint'
+                name='follow_unique_constraint'
             )
         ]
 
