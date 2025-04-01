@@ -13,7 +13,7 @@ from rest_framework import pagination
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset =  Group.objects.all()
+    queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
@@ -29,12 +29,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise exceptions.PermissionDenied('Изменение чужого контента запрещено!')
+            raise exceptions.PermissionDenied(
+                'Изменение чужого контента запрещено!')
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise exceptions.PermissionDenied('Удаление чужого контента запрещено!')
+            raise exceptions.PermissionDenied(
+                'Удаление чужого контента запрещено!')
         super().perform_destroy(instance)
 
 
@@ -53,12 +55,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise exceptions.PermissionDenied('Изменение чужого комментария запрещено!')
+            raise exceptions.PermissionDenied(
+                'Изменение чужого комментария запрещено!')
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise exceptions.PermissionDenied('Удаление чужого комментария запрещено!')
+            raise exceptions.PermissionDenied(
+                'Удаление чужого комментария запрещено!')
         super().perform_destroy(instance)
 
 
