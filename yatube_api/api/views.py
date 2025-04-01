@@ -1,8 +1,14 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework import exceptions
-from posts.models import Group, Post, Comment
-from .serializers import GroupSerializer, PostSerializer, CommentSerializer
+from rest_framework import filters
+from posts.models import Group, Post, Comment, Follow
+from .serializers import (
+    GroupSerializer,
+    PostSerializer,
+    CommentSerializer,
+    FollowSerializer
+)
 from rest_framework import pagination
 
 
@@ -54,3 +60,18 @@ class CommentViewSet(viewsets.ModelViewSet):
         if instance.author != self.request.user:
             raise exceptions.PermissionDenied('Удаление чужого комментария запрещено!')
         super().perform_destroy(instance)
+
+
+class FollowViewSet(viewsets.ModelViewSet):
+    queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('following__username',)
+
+    def get_queryset(self):
+        new_queryset = Follow.objects.filter(user=self.request.user)
+        return new_queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

@@ -15,9 +15,17 @@ class Group(models.Model):
 
 class Follow(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='user')
+        User, on_delete=models.CASCADE, related_name='folower')
     following = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name='following', blank=True, null=True)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'following'],
+                name = 'follow_unique_constraint'
+            )
+        ]
 
 
 class Post(models.Model):
@@ -31,7 +39,7 @@ class Post(models.Model):
         Group, on_delete=models.SET_NULL,
         related_name='posts', blank=True, null=True
     )
-    
+
     def __str__(self):
         return self.text
 
